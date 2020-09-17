@@ -2,22 +2,29 @@
 
 package org.jetbrains.dokka.analysis
 
+import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.DokkaConfiguration.DokkaSourceSet
 import org.jetbrains.dokka.DokkaSourceSetID
 import org.jetbrains.dokka.model.SourceSetDependent
 import org.jetbrains.dokka.plugability.DokkaContext
+import org.jetbrains.dokka.utilities.DokkaLogger
 
-fun KotlinAnalysis(context: DokkaContext): KotlinAnalysis {
-    val environments = context.configuration.sourceSets.associateWith { sourceSet ->
+fun KotlinAnalysis(configuration: DokkaConfiguration, logger: DokkaLogger): KotlinAnalysis {
+    val environments = configuration.sourceSets.associateWith { sourceSet ->
         createEnvironmentAndFacade(
-            logger = context.logger,
-            configuration = context.configuration,
+            logger = logger,
+            configuration = configuration,
             sourceSet = sourceSet
         )
     }
 
     return KotlinAnalysisImpl(environments)
 }
+
+@Deprecated(message = "Construct using DokkaConfiguration and logger",
+    replaceWith = ReplaceWith("KotlinAnalysis(context.configuration, context.logger)")
+)
+fun KotlinAnalysis(context: DokkaContext): KotlinAnalysis = KotlinAnalysis(context.configuration, context.logger)
 
 interface KotlinAnalysis : SourceSetDependent<EnvironmentAndFacade> {
     override fun get(key: DokkaSourceSet): EnvironmentAndFacade
