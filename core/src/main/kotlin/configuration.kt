@@ -29,6 +29,8 @@ object DokkaDefaults {
     const val sourceSetDisplayName = "JVM"
     const val sourceSetName = "main"
     val moduleVersion: String? = null
+    val customAssets = emptyList<File>()
+    val customStylesheets = emptyList<File>()
 }
 
 enum class Platform(val key: String) {
@@ -93,6 +95,8 @@ interface DokkaConfiguration : Serializable {
     val modules: List<DokkaModuleDescription>
     val pluginsClasspath: List<File>
     val pluginsConfiguration: Map<String, String>
+    val customStyleSheets: List<File>
+    val customAssets: List<File>
 
     interface DokkaSourceSet : Serializable {
         val sourceSetID: DokkaSourceSetID

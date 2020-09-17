@@ -7,6 +7,7 @@ import kotlinx.html.h1
 import kotlinx.html.id
 import kotlinx.html.table
 import kotlinx.html.tbody
+import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.base.renderers.sourceSets
 import org.jetbrains.dokka.links.DRI
 import org.jetbrains.dokka.model.DEnum
@@ -88,8 +89,20 @@ object NavigationPageInstaller : PageTransformer {
         }.sortedBy { it.name.toLowerCase() }
 }
 
-object ResourceInstaller : PageTransformer {
-    override fun invoke(input: RootPageNode) = input.modified(children = input.children + resourcePages)
+class ResourceInstaller(val dokkaConfiguration: DokkaConfiguration) : PageTransformer {
+    override fun invoke(input: RootPageNode) = input.modified(children = input.children + pages)
+
+    private val pages by lazy {
+        resourcePages + customAssets + customStylesheets
+    }
+
+    private val customAssets = dokkaConfiguration.customAssets.map {
+        RendererSpecificResourcePage("images/${it.name}", emptyList(), RenderingStrategy.Copy(it.absolutePath))
+    }
+
+    private val customStylesheets = dokkaConfiguration.customStyleSheets.map {
+        RendererSpecificResourcePage("styles/${it.name}", emptyList(), RenderingStrategy.Copy(it.absolutePath))
+    }
 
     private val resourcePages = listOf("styles", "scripts", "images").map {
         RendererSpecificResourcePage(it, emptyList(), RenderingStrategy.Copy("/dokka/$it"))

@@ -33,7 +33,7 @@ class FileWriter(val context: DokkaContext): OutputWriter {
     }
 
     override suspend fun writeResources(pathFrom: String, pathTo: String) =
-        if (javaClass.getResource(pathFrom).toURI().toString().startsWith(jarUriPrefix)) {
+        if (javaClass.getResource(pathFrom)?.toURI()?.toString()?.startsWith(jarUriPrefix) == true) {
             copyFromJar(pathFrom, pathTo)
         } else {
             copyFromDirectory(pathFrom, pathTo)
@@ -42,9 +42,10 @@ class FileWriter(val context: DokkaContext): OutputWriter {
 
     private suspend fun copyFromDirectory(pathFrom: String, pathTo: String) {
         val dest = Paths.get(root.path, pathTo).toFile()
-        val uri = javaClass.getResource(pathFrom).toURI()
+        val uri = javaClass.getResource(pathFrom)?.toURI()
+        val file = uri?.let { File(it) } ?: File(pathFrom)
         withContext(Dispatchers.IO) {
-            File(uri).copyRecursively(dest, true)
+            file.copyRecursively(dest, true)
         }
     }
 

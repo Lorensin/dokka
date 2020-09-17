@@ -104,6 +104,10 @@ class BasicGradleIntegrationTest(override val versions: BuildVersions) : Abstrac
             },
             "Expected `SampleJavaClass` source link to GitHub"
         )
+
+        assertEquals(stylesDir.resolve("styles.css").readText(), """/* sample overridden styles */""")
+        assertEquals(stylesDir.resolve("addedStylesheet.css").readText(), """/* sample added styles */""")
+        assertTrue(imagesDir.resolve("icon.svg").isFile)
     }
 
     private fun File.assertJavadocOutputDir() {

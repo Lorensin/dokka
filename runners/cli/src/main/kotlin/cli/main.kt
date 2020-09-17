@@ -64,6 +64,16 @@ class GlobalArguments(args: Array<String>) : DokkaConfiguration {
         "Throw an exception if the generation exited with warnings"
     ).default(DokkaDefaults.failOnWarning)
 
+    override val customStyleSheets by parser.option(
+        ArgTypeFile,
+        description = "Custom stylesheets to add to output files"
+    ).delimiter(";").default(DokkaDefaults.customStylesheets)
+
+    override val customAssets by parser.option(
+        ArgTypeFile,
+        description = "Custom assets to add to output files"
+    ).delimiter(";").default(DokkaDefaults.customAssets)
+
     val globalPackageOptions by parser.option(
         ArgType.String,
         description = "List of package source sets in format \"prefix,-deprecated,-privateApi,+warnUndocumented,+suppress;...\" "
@@ -254,7 +264,7 @@ object ArgTypeFile : ArgType<File>(true) {
 object ArgTypePlatform : ArgType<Platform>(true) {
     override fun convert(value: kotlin.String, name: kotlin.String): Platform = Platform.fromString(value)
     override val description: kotlin.String
-        get() = "{ String thar represents paltform }"
+        get() = "{ String thar represents plaform }"
 }
 
 object ArgTypePlugin : ArgType<Map<String, String>>(true) {

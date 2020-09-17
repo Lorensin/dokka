@@ -203,7 +203,7 @@ class DokkaBase : DokkaPlugin() {
     }
 
     val resourceInstaller by extending {
-        htmlPreprocessors with ResourceInstaller order { after(rootCreator) }
+        htmlPreprocessors providing { ctx -> ResourceInstaller(ctx.configuration) } order { after(rootCreator) }
     }
 
     val styleAndScriptsAppender by extending {

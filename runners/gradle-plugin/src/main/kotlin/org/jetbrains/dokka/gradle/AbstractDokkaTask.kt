@@ -8,9 +8,11 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaBasePlugin
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.*
+import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.mapProperty
 import org.jetbrains.dokka.DokkaBootstrap
 import org.jetbrains.dokka.DokkaConfigurationImpl
@@ -50,6 +52,12 @@ abstract class AbstractDokkaTask(
 
     @Input
     val pluginsConfiguration: MapProperty<String, String> = project.objects.mapProperty()
+
+    @Input
+    val customStyleSheets: ListProperty<File> = project.objects.listProperty()
+
+    @Input
+    val customAssets: ListProperty<File> = project.objects.listProperty()
 
     @Classpath
     val plugins: Configuration = project.maybeCreateDokkaPluginConfiguration(name)
